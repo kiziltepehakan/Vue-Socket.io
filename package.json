@@ -3,7 +3,7 @@
   "author": "Metin Seylan <metinsyln@gmail.com>",
   "version": "4.5.2",
   "description": "socket.io implementation for Vue.js and Vuex",
-  "main": "dist/vue-socketio.js",
+  "main": "dist/vue-socketio-v4.js",
   "contributors": [
     "Metin Seylan",
     "Hakan KIZILTEPE"
