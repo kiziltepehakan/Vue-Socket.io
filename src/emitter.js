@@ -93,41 +93,30 @@ export default class EventEmitter{
 
         if(this.store && this.store._actions){
 
-            let prefixed_event = this.actionPrefix + event;
+            let process = (actionPrefix, storeKey, method, logMessage) => {
 
-            for (let key in this.store._actions) {
+                if(actionPrefix) {
 
-                let action = key.split('/').pop();
+                    let prefixed_event = actionPrefix + event;
 
-                if(action === prefixed_event) {
+                    for (let key in this.store[storeKey]) {
 
-                    Logger.info(`Dispatching Action: ${key}, Data:`, args);
+                        let action = key.split('/').pop();
 
-                    this.store.dispatch(key, args);
+                        if(action === prefixed_event) {
 
-                }
+                            Logger.info(`${logMessage}: ${key}, Data:`, args);
 
-            }
+                            this.store[method](key, args);
 
-            if(this.mutationPrefix) {
-
-                let prefixed_event = this.mutationPrefix + event;
-
-                for (let key in this.store._mutations) {
-
-                    let mutation = key.split('/').pop();
-
-                    if(mutation === prefixed_event) {
-
-                        Logger.info(`Commiting Mutation: ${key}, Data:`, args);
-
-                        this.store.commit(key, args);
+                        }
 
                     }
-
                 }
-
             }
+
+            process(this.actionPrefix, '_actions', 'dispatch', 'Dispatching Action');
+            process(this.mutationPrefix, '_mutations', 'commit', 'Commiting Mutation');
 
         }
 
