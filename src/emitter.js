@@ -97,7 +97,7 @@ export default class EventEmitter{
 
             for (let key in this.store._actions) {
 
-                let action = key.split('/').pop();
+                let action = key.substring(key.lastIndexOf('/') + 1);
 
                 if(action === prefixed_event) {
 
@@ -115,7 +115,7 @@ export default class EventEmitter{
 
                 for (let key in this.store._mutations) {
 
-                    let mutation = key.split('/').pop();
+                    let mutation = key.substring(key.lastIndexOf('/') + 1);
 
                     if(mutation === prefixed_event) {
 
