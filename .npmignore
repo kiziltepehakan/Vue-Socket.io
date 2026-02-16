@@ -15,3 +15,5 @@ yarn-error.log*
 *.njsproj
 *.sln
 .github/
+test/
+babel.config.js
