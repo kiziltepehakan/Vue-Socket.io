@@ -20,4 +20,4 @@ package-lock.json
 *.suo
 *.ntvs*
 *.njsproj
-*.sln
+*.slncoverage
