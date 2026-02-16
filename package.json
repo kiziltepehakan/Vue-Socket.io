@@ -9,7 +9,7 @@
     "Hakan KIZILTEPE"
   ],
   "bugs": {
-    "url": "https://github.com/kiziltepehakan/Vue-Socket.io/issues"
+    "url": "https://github.com/MetinSeylan/Vue-Socket.io/issues"
   },
   "scripts": {
     "build": "webpack --mode=production --progress --hide-modules"
@@ -31,9 +31,6 @@
     "redux"
   ],
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/MetinSeylan/Vue-Socket.io/issues"
-  },
   "homepage": "https://github.com/MetinSeylan/Vue-Socket.io",
   "dependencies": {
     "socket.io-client": "^4.5.2"
