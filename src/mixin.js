@@ -7,12 +7,21 @@ export default {
 
         if(!this.sockets) this.sockets = {};
 
+        this.sockets._dynamicEvents = [];
+
         this.sockets.subscribe = (event, callback) => {
             this.$vueSocketIo.emitter.addListener(event, callback, this);
+            if(!this.sockets._dynamicEvents.includes(event)){
+                this.sockets._dynamicEvents.push(event);
+            }
         };
 
         this.sockets.unsubscribe = (event) => {
             this.$vueSocketIo.emitter.removeListener(event, this);
+            const index = this.sockets._dynamicEvents.indexOf(event);
+            if (index > -1) {
+                this.sockets._dynamicEvents.splice(index, 1);
+            }
         };
 
     },
@@ -44,6 +53,16 @@ export default {
         if(this.$options.sockets){
 
             Object.keys(this.$options.sockets).forEach(event => {
+
+                this.$vueSocketIo.emitter.removeListener(event, this);
+
+            });
+
+        }
+
+        if(this.sockets && this.sockets._dynamicEvents){
+
+            this.sockets._dynamicEvents.forEach(event => {
 
                 this.$vueSocketIo.emitter.removeListener(event, this);
 
