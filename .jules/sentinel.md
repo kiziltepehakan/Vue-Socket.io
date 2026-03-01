@@ -1,0 +1,5 @@
+
+## 2026-03-01 - [Data Exposure in Logger]
+**Vulnerability:** The internal `VueSocketIOLogger` in `src/logger.js` logged entire objects directly to the browser console when debug mode was enabled. This could expose sensitive application data, including passwords, API keys, and authentication tokens that were part of WebSocket payloads or Vuex state changes.
+**Learning:** Development tools and internal loggers often implicitly trust the data they receive. While debug logs are meant for development, they sometimes end up activated in production environments. Any logger handling complex objects needs a sanitization mechanism before writing to output streams.
+**Prevention:** Implement a recursive sanitization function that deep-clones log data, specifically filtering for known sensitive keys (e.g., matching `/password|token|secret|credential|key|auth/i`), and replaces their values with `[REDACTED]`. It is crucial to use a `WeakSet` during this process to avoid infinite recursion from circular dependencies.
