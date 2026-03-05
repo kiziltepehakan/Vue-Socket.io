@@ -1,0 +1,4 @@
+## 2026-03-05 - Fix Exposed Sensitive Data in Logs
+**Vulnerability:** The logger in `src/logger.js` was blindly logging entire objects to the browser console without sanitizing sensitive properties like passwords or tokens. When integrating with Vuex and dispatching store actions/mutations, this could result in exposing user credentials or authentication tokens to anyone with browser console access or malicious extensions.
+**Learning:** Third-party logging utilities, especially those binding event data to global state management (like Vuex), need strict payload sanitization before outputting to standard error/out or browser developer tools.
+**Prevention:** Implement recursive sanitization on all logged objects to redact properties matching sensitive keywords (`password`, `token`, `secret`, `credential`, `key`, `auth`) before they hit `window.console`. Handled circular references using `WeakSet` to prevent stack overflow during sanitization.
