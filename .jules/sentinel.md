@@ -1,0 +1,4 @@
+## 2026-03-06 - [High] Fix exposed sensitive data in logs
+**Vulnerability:** Vue-Socket.io plugin logged event payloads blindly to the browser console. Complex or circular objects (common in Vue apps) and sensitive fields (like 'token' or 'password') were exposed directly.
+**Learning:** Logging logic that intercepts potentially dynamic and expansive payloads must assume an untrusted and complex data structure. Standard redacting without circular reference checking leads to infinite loops, requiring robust sanitization utilizing structural sharing like `WeakSet`.
+**Prevention:** Implement a recursive sanitization utility with circular reference tracking natively in custom loggers, or integrate robust third-party logging solutions that handle serialization edge-cases correctly before emitting messages to standard outputs.
