@@ -1,0 +1,4 @@
+## 2024-05-20 - Sensitive Data Exposure in Logs
+**Vulnerability:** The `VueSocketIOLogger` class in `src/logger.js` previously logged raw data objects to `window.console` when debug mode was enabled. This could lead to sensitive data exposure, such as passwords, tokens, or credentials, being leaked in the browser console.
+**Learning:** Even when debug mode is disabled by default, developers might enable it in production environments, potentially exposing sensitive data. It is crucial to sanitize all objects and data passed to loggers.
+**Prevention:** Implement recursive sanitization for all logger arguments that replaces values associated with sensitive keys (e.g., matching `/password|token|secret|credential|key|auth/i`) with a `[REDACTED]` string. Always protect against circular references during sanitization using a `WeakSet`.
