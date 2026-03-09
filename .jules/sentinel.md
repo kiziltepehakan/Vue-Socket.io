@@ -1,0 +1,4 @@
+## 2026-03-09 - [Prevent Data Leakage in Client-Side Logger]
+**Vulnerability:** The client-side logger in `src/logger.js` was logging all event data and arguments without sanitization when debug mode was enabled. This could lead to exposing sensitive information (like passwords or tokens) in the browser console.
+**Learning:** Client-side libraries, especially those dealing with raw network events like Socket.io integrations, must be careful to sanitize data before passing it to `console.log`. Even if debug mode is intended for developers, end-users could inadvertently expose their own data if instructed to "open the console" or if debug mode is accidentally left enabled in production.
+**Prevention:** Implement a recursive data sanitizer on the logger class that masks known sensitive keys (e.g., matching `/password|token|secret/i`) with `[REDACTED]` before writing to any console output.
