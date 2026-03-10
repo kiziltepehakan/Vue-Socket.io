@@ -1,0 +1,4 @@
+## 2024-05-18 - Prevent Sensitive Data Leakage in Debug Logs
+**Vulnerability:** The `VueSocketIOLogger` was directly passing incoming socket data to `window.console` when debug mode was enabled. This could lead to exposing sensitive information (e.g., passwords, auth tokens, secrets) sent via WebSocket connections in the user's browser developer console.
+**Learning:** Even when logging is considered "internal" or behind a debug flag, it's critical to scrub or sanitize objects before logging them to external services or standard outputs, especially in browser environments where extensions or physical shoulder-surfers can easily view console output.
+**Prevention:** Implement a recursive data sanitization function that traverses all incoming and outgoing event data and replaces values associated with known sensitive keys (like `password`, `token`, `secret`) with a `[REDACTED]` placeholder prior to logging.
