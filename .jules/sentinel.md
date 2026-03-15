@@ -1,0 +1,4 @@
+## 2024-03-15 - Redacting Sensitive Debug Logs Safely
+**Vulnerability:** The standard logger blindly logged raw internal socket data, including potential credentials or tokens, leading to potential Sensitive Data Exposure.
+**Learning:** When adding recursive sanitization mechanisms to debug logs, one must properly use `WeakSet` or similar data structures to securely detect and escape circular object references, otherwise it could lead to an infinite loop, ultimately crashing the underlying process via a stack overflow. Additionally, certain built-in objects like `Error`, `Date`, and `RegExp` require explicit bypassing to not break their native formatting.
+**Prevention:** Incorporate a robust generic sanitization routine for any debug logging logic taking arbitrary argument objects, explicitly handling non-primitive structures and circular references reliably.
