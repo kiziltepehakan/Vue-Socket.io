@@ -1,0 +1,4 @@
+## 2024-05-20 - Prevent Sensitive Data Leakage in Client-side Logs
+**Vulnerability:** The logger class blindly logged potentially sensitive data objects (which could contain passwords, tokens, API keys) to the browser console. This poses a security risk as client-side logs can be inspected by malicious actors or inadvertently collected.
+**Learning:** Even when logging is enabled strictly for debugging or specific environments, recursive object sanitation is required to prevent accidental leakage of sensitive keys across the entire structure of logged objects.
+**Prevention:** Implemented a robust `sanitize` method using a regex to filter sensitive keys (`/password|token|secret|credential|key|auth/i`) and handle circular references via `WeakSet`. Ensure all client-side logging passes through this sanitizer before calling `window.console`.
