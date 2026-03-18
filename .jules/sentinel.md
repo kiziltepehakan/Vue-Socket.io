@@ -1,0 +1,4 @@
+## 2026-03-18 - [Fix Sensitive Data Exposure in Logs]
+**Vulnerability:** The logger class `VueSocketIOLogger` was logging potentially sensitive data, such as passwords, tokens, secrets, or keys directly to the browser console or log aggregators when `debug` mode was enabled, leading to an information disclosure risk.
+**Learning:** This highlights the importance of implementing centralized log sanitization before data is emitted, especially in plugins and middleware that might handle highly varied user data payloads over websockets.
+**Prevention:** Always intercept and sanitize log payloads by filtering out known sensitive property keys (e.g. using regex) before output. When implementing recursive object sanitization, be sure to use a `Set` to track and break circular references to avoid crashing the logging functionality itself.
