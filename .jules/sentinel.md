@@ -1,0 +1,4 @@
+## 2024-05-20 - Sensitive Data Exposure in Logs
+**Vulnerability:** The logger in `src/logger.js` passed event payloads and store states directly to `window.console` during debugging operations, exposing sensitive data such as API keys, passwords, tokens, and credentials in the browser's developer console.
+**Learning:** Even though logging is often disabled in production (e.g. `this.debug` check), developers may enable it in lower environments, during troubleshooting, or in misconfigured production builds. If payloads or actions carry sensitive state, the browser console acts as a leak point. Furthermore, complex or cyclic object logging needs safe recursive sanitization without freezing the app.
+**Prevention:** Implement sanitization logic that runs *before* data reaches `console.log/info/warn/error`. Recursively redact keys matching patterns like `/password|token|secret|key/i` while preserving fundamental types and gracefully handling circular references.
