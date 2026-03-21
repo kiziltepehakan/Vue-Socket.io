@@ -1,0 +1,4 @@
+## 2024-05-24 - [Information Disclosure in Logger]
+**Vulnerability:** The logger prints out data received from sockets directly to the console when `debug` mode is enabled. This can potentially leak sensitive information like passwords, tokens, or other credentials in the browser console.
+**Learning:** Even in a browser library intended to bridge Socket.IO and Vue.js/Vuex, we must ensure that logs do not leak sensitive PII or secrets. Passing raw data arrays/objects to `window.console` can lead to unintentional information disclosure if developers turn on debug mode in production or leak debug logs.
+**Prevention:** Implement a recursive sanitization function that scrubs properties matching common sensitive key names (e.g. `password`, `token`, `secret`, `credential`, `key`, `auth`) by replacing their values with `[REDACTED]`. Care must be taken to safely handle circular references without destroying observability.
