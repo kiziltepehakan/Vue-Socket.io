@@ -1,0 +1,4 @@
+## 2024-05-18 - Information Exposure via Debug Logs
+**Vulnerability:** The `VueSocketIOLogger` was directly passing raw data objects to `window.console` methods when debugging was enabled. This could lead to exposing sensitive user information (like passwords, auth tokens, etc.) that might be part of the WebSocket payloads or Vuex mutations directly to the browser console.
+**Learning:** Even diagnostic outputs (like debug logs) in client-side libraries need sanitization, as developers might enable debug mode in environments where sensitive data is processed. When sanitizing, care must be taken to safely handle complex objects (handling circular references, avoiding freezing on binary data, and preserving instances like Error/Date).
+**Prevention:** Implement a recursive data sanitizer that explicitly redacts known sensitive keys (`password`, `token`, `secret`, `credential`, `key`, `auth`) before passing arguments to underlying console/logging mechanisms.
