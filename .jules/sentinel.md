@@ -1,0 +1,4 @@
+## 2024-05-24 - Sensitive Data Leakage in Debug Logger
+**Vulnerability:** The VueSocketIOLogger logs all socket events and their payloads to the browser console when debug mode is enabled. If sensitive data like passwords, authentication tokens, or credentials are included in the socket payload, they are exposed in the console.
+**Learning:** Even though logging is often disabled in production, debug flags might be accidentally turned on or users might be asked to turn them on for troubleshooting. Logging raw objects directly exposes any sensitive fields they contain, presenting an Information Disclosure vulnerability.
+**Prevention:** Implement a recursive sanitization function for all objects logged. This function should identify common sensitive keys via regex (e.g. password, token, secret) and redact their values before passing them to `console.log`.
