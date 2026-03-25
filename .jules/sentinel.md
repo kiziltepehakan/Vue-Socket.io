@@ -1,0 +1,4 @@
+## 2026-03-25 - Sensitive Data Exposure in Console Logs
+**Vulnerability:** The logger (`src/logger.js`) indiscriminately logs whatever data is passed to it, potentially exposing sensitive information like passwords, tokens, or keys in the console when debug mode is enabled.
+**Learning:** Console logs can leak sensitive information. Since this library is used in browser environments, any logged sensitive data can be viewed by anyone inspecting the console. Debug logs shouldn't be blindly trusted to be safe for console output if they deal with sensitive events.
+**Prevention:** Implement a recursive sanitization mechanism for log data that redacts fields matching common sensitive keywords (e.g., password, token, secret) before outputting to `window.console`. Ensure the sanitization handles circular references and complex object types without throwing errors.
