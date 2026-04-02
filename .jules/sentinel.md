@@ -1,0 +1,4 @@
+## 2026-04-02 - Sanitize Sensitive Data in Logs
+**Vulnerability:** The logger in `VueSocketIOLogger` previously printed all structured object payloads directly to `window.console` when `debug` was true. This could leak sensitive values like passwords, tokens, auth keys, and credentials if they were sent or received over a websocket.
+**Learning:** Adding robust recursive sanitization required dealing with Javascript's arbitrary object structure and potential for circular references. We also had to be careful not to accidentally destroy functional object capabilities (like `Date`, `Error`, `RegExp` types or complex nested classes that shouldn't be deep copied/cloned).
+**Prevention:** Implement an interceptor pattern before log output containing a recursive sanitizer utilizing `Set` to track visited objects (to prevent `[Circular]` stack overflows), and restricting deep sanitization to plain objects (`[object Object]`) and Arrays to preserve native and complex types.
