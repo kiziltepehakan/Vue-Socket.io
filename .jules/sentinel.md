@@ -1,0 +1,4 @@
+## 2026-03-04 - Information Disclosure in WebSocket Logging
+**Vulnerability:** The logger in the `vue-socket.io` implementation directly dumped un-sanitized WebSockets payload arguments to `window.console` when debug was enabled. This would inadvertently leak user secrets such as tokens or passwords passed in WebSocket packets.
+**Learning:** Even though logging debug info is useful, we should never directly print unstructured objects which often carry sensitive keys like `password`, `token`, `secret`, `credential`, etc. It requires robust recursive object/array traversal to redact them safely while avoiding recursive reference loop issues and maintaining the structure.
+**Prevention:** Implement recursive generic object sanitizers on debugging outputs. Be careful to check `seen.has(obj)` to skip cyclic data structures preventing infinite recursions or browser hangs.
