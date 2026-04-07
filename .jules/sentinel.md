@@ -1,0 +1,4 @@
+## 2024-04-07 - Sensitive Data Exposure in Browser Console via Logger
+**Vulnerability:** Sensitive data exposure in logs. The `VueSocketIOLogger` outputs entire objects to the browser console when `debug: true` is set, potentially exposing API keys, passwords, and tokens that might exist within Vuex store state, component state, or incoming WebSocket packets.
+**Learning:** Browser environments present unique security considerations because debugging tools are exposed directly to the end user. When logging tools output entire un-sanitized objects, any sensitive data contained within is inherently leaked. Debug flags should not bypass the need for data sanitization in client-side libraries.
+**Prevention:** All data passed to logging methods, especially in client-side/browser libraries, should be sanitized before being output. A sanitization filter that intercepts and replaces values for known sensitive keys (e.g., password, token, key) prevents accidental leaks.
