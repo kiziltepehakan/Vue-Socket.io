@@ -1,0 +1,4 @@
+## 2026-04-13 - Prevent Sensitive Data Leakage in WebSocket Logs
+**Vulnerability:** The logger in the `vue-socket.io` library output raw, unsanitized socket payload data to the browser console when `debug` mode was enabled. This could inadvertently expose sensitive information like authentication tokens or passwords sent over WebSockets.
+**Learning:** Frontend libraries that wrap real-time communication protocols often log raw events for debugging. If these payloads contain sensitive data (which is common in auth flows or secure messaging), enabling debug logging can lead to data exposure in the browser's console, which might be captured by monitoring tools or extensions.
+**Prevention:** Implement recursive data sanitization in the logging layer that safely handles plain objects and arrays (including circular references) and redacts values for known sensitive keys (e.g., `password`, `token`, `secret`) before outputting to `window.console`.
