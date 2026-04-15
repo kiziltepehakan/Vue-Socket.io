@@ -1,0 +1,4 @@
+## 2026-04-15 - Prevent Sensitive Data Leakage in Logging
+**Vulnerability:** The logger directly printed `window.console` logs including any passed data objects, which could leak sensitive information like passwords, secrets, or tokens that were present in the Vuex state or socket event payloads.
+**Learning:** Application logs, especially those tracking events and state mutations on the frontend, can unintentionally leak sensitive data. Redacting logging payloads based on key heuristics (like `/password|token|secret|credential|key|auth/i`) is a crucial defense-in-depth practice.
+**Prevention:** Always implement a sanitization pass on complex objects before passing them to the logging facility, and explicitly test for circular references and deep object traversal to prevent performance bottlenecks or stack overflows during sanitization.
