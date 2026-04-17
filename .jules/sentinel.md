@@ -1,0 +1,4 @@
+## 2024-05-15 - Secure Logger Implementation
+**Vulnerability:** The application's logger was outputting raw event data directly to the browser console without any redaction. Websocket events often transport sensitive information such as authentication tokens, passwords, or PII. Logging this data unsanitized to the browser console exposes it to malicious browser extensions or potential XSS attacks that can scrape the console.
+**Learning:** Even when gated behind a debug flag, application loggers should not dump raw state indiscriminately. Developer tools and debug output must still respect data privacy and implement a defensive boundary before writing to stdout/console.
+**Prevention:** Implement a recursive data sanitization layer in the logger that actively detects and redacts sensitive keys (e.g., matching /password|token|secret|credential|key|auth/i) before logging, while safely handling circular references and preserving complex objects.
