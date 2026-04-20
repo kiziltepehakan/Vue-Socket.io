@@ -1,0 +1,4 @@
+## 2024-04-20 - Sensitive Data Exposure in Logs
+**Vulnerability:** The logger prints raw data payloads to the console when debug mode is enabled, potentially exposing sensitive information (passwords, tokens, auth keys) in client-side logs.
+**Learning:** Client-side debugging loggers can be a source of data leaks if they indiscriminately dump raw objects. Implementing a deep sanitization function requires careful handling of circular references to prevent maximum call stack errors, as well as preserving non-plain objects (Error, Date, etc.) to maintain observability.
+**Prevention:** Implement a recursive sanitization layer in loggers that redacts keys matching sensitive patterns (e.g., password, token), safely handles circular references using a Set, and strictly processes only plain objects and arrays.
