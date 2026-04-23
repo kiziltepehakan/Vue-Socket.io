@@ -1,0 +1,4 @@
+## 2024-05-20 - Prevent Info Leak in Logger
+**Vulnerability:** Debug logs in `src/logger.js` exposed raw Socket.io events and Vuex data to the browser console. If `debug: true` was accidentally deployed to production, it could leak sensitive credentials (passwords, auth tokens) in plaintext.
+**Learning:** Wrapper libraries bridging application state (Vuex) and transport layers (Sockets) are common places for unintended data leaks. They often capture massive, undifferentiated data payloads that developers might log indiscriminately without redaction logic.
+**Prevention:** Always sanitize payloads at the logging perimeter before calling `window.console` or external loggers. Implement generic recursive redact functions targeting sensitive keywords (`password`, `token`, etc.), whilst guarding against `Maximum call stack size exceeded` errors by using cyclic dependency checking (`Set`).
