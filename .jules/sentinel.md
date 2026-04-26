@@ -1,0 +1,4 @@
+## 2024-05-24 - [Sensitive Data Exposure in Logger]
+**Vulnerability:** The logger class (`src/logger.js`) logs all data objects directly to `window.console` in debug mode. Since Socket.io payloads often include authentication tokens or user credentials, these get printed in plaintext, creating a risk of exposing sensitive data.
+**Learning:** Even though logging occurs only in debug mode, it is extremely common for developers to inadvertently leave it enabled, or for the debug flag to be activated locally and logs shared. Any internal logging mechanism should inherently sanitize payloads, especially in a library intended for public deployment.
+**Prevention:** Always implement a sanitization layer on logger inputs targeting typical sensitive keys (`/password|token|secret|credential|key|auth/i`). Handle circular references to avoid crashing.
