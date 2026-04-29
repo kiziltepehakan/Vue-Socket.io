@@ -1,0 +1,4 @@
+## 2024-05-15 - [Exposed Sensitive Data in Debug Logs]
+**Vulnerability:** The `VueSocketIOLogger` was outputting raw event data to `window.console` methods (e.g., `info`, `warn`, `error`, `event`) when `debug` was enabled. This could lead to sensitive information such as passwords, tokens, and secrets being exposed in browser developer tools.
+**Learning:** Even though logging is often a developer tool, it's a critical boundary for data exposure. When a library automatically logs payloads from external events (like web sockets), it has no control over what developers pass through it.
+**Prevention:** Implement a recursive data sanitizer on the logger side. We added a `sanitize` method that processes plain objects and arrays to replace keys matching `/password|token|secret|credential|key|auth/i` with `[REDACTED]`. It uses a `Set` to prevent infinite loops from circular references and avoids destroying native object behavior (like `Date` or `RegExp`).
