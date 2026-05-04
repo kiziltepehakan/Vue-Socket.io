@@ -1,0 +1,4 @@
+## 2026-05-04 - [CRITICAL] Prevent sensitive data exposure in browser console logs
+**Vulnerability:** The `VueSocketIOLogger` was directly passing data containing sensitive properties (like passwords, tokens, auth keys) to `window.console` methods, potentially exposing user credentials to third-party scripts or anyone inspecting the browser console.
+**Learning:** Browser environments must always be treated as untrusted. Debug logs can inadvertently leak PII or authentication keys. Even simple wrapper loggers need redaction capabilities before delegating to the native `console`.
+**Prevention:** Implement a recursive sanitization mechanism using regex matching against known sensitive keys (`/password|token|secret|credential|key|auth/i`) to replace sensitive values with `[REDACTED]`. The sanitizer must handle circular references safely to avoid stack overflows.
