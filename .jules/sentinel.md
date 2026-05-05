@@ -1,0 +1,4 @@
+## 2024-05-24 - Prevent sensitive data exposure in Socket.IO events and logs
+**Vulnerability:** The logger in `src/logger.js` logged all Socket.io events and payloads blindly to the browser console. Since Socket.io payloads often carry sensitive data like authentication tokens, passwords, and user details, this could lead to information exposure in production and test environments via browser logs or logging aggregation tools.
+**Learning:** Blind logging of complex objects like network payloads is risky. It exposes the application to data leaks. Circular dependencies within these objects can also crash simpler sanitization attempts or `JSON.stringify()`.
+**Prevention:** Implement a robust `sanitize` method on the logging utility that recursively sweeps objects and arrays to replace keys matching `/password|token|secret|credential|key|auth/i` with `[REDACTED]`, while carefully maintaining a `Set` to track and prevent infinite loops on circular references.
