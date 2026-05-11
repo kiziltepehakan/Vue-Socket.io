@@ -1,0 +1,4 @@
+## 2024-05-15 - [Sensitive Data Exposure in Logger]
+**Vulnerability:** The logger class (`src/logger.js`) in debug mode previously logged raw payload data to the console without sanitizing, potentially exposing sensitive information such as passwords, tokens, secrets, credentials, keys, or auth data to anyone who can access the browser console or log aggregators.
+**Learning:** Third-party integrations, particularly those debugging sockets or data transmission, can easily leak sensitive user information into application logs if not explicitly sanitized. Even in a library targeting the browser console, exposing such data represents a significant risk.
+**Prevention:** Implement a recursive sanitization mechanism for all objects/arrays passed to logger utilities that redact fields matching common sensitive keywords, taking care to handle circular references securely.
