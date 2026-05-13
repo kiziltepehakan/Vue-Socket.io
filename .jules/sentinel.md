@@ -1,0 +1,4 @@
+## 2026-05-13 - [HIGH] Fix sensitive data leakage in console logs
+**Vulnerability:** The logger class (`src/logger.js`) previously wrote all socket data directly to the browser console during debug mode. If an application sent authentication tokens, passwords, or other sensitive credentials over sockets, they would be visible in plaintext to anyone looking at the developer tools.
+**Learning:** Browser console logging can unintentionally leak secrets on the client side. Applications should sanitize log outputs to replace sensitive keys with `[REDACTED]`. Complex and circular structures must be handled properly during sanitization to avoid crashing the logger.
+**Prevention:** Implement recursive object sanitization with circular reference handling specifically for plain objects and arrays in all debug logging methods, masking keys matching standard secret patterns (`/password|token|secret|credential|key|auth/i`).
