@@ -1,0 +1,4 @@
+## 2024-05-16 - Prevent Sensitive Data Exposure in Logger
+**Vulnerability:** The logger class in `src/logger.js` directly passes raw data to `window.console.info`, `warn`, and `error` without sanitization. This can lead to sensitive information (such as passwords, tokens, or API keys) embedded in socket.io event payloads being exposed in the browser's developer console.
+**Learning:** Even internal logging mechanisms must be treated as potential exposure vectors for sensitive user data, particularly in client-side libraries where logs are visible to end users and potentially third-party scripts.
+**Prevention:** Implement a recursive data sanitization function that intercepts and redacts object values corresponding to sensitive keys (e.g., password, token, secret) before they are passed to any console output.
