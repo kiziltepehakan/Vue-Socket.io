@@ -1,0 +1,4 @@
+## 2024-05-18 - Sensitive Data Exposure in Debug Logs
+**Vulnerability:** The `VueSocketIOLogger` class logged all raw payload and event data directly to `window.console` when debug mode was enabled. This could expose sensitive user credentials (passwords, tokens, API keys) passed over websockets in the browser console.
+**Learning:** Even internal logging mechanisms must be treated as untrusted outputs that require sanitization. Objects and arrays passed to console loggers can contain deeply nested secrets that leak into browser debug tools or error-reporting services that hook into `console`.
+**Prevention:** Always implement a recursive sanitization function for objects passed to debug loggers to automatically redact keys that match common sensitive patterns (`password`, `token`, `secret`, etc.), while taking care to handle circular dependencies and complex objects properly.
