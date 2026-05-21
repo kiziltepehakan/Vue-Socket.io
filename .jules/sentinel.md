@@ -1,0 +1,4 @@
+## 2026-05-21 - [Sensitive Data Exposure in Console Logs]
+**Vulnerability:** The logger in `src/logger.js` printed out all raw Socket.io events and payloads directly to `window.console` without filtering out sensitive keys like passwords or tokens.
+**Learning:** In client-side websocket integrations, blindly logging socket event payloads (which often include auth tokens or credentials) is a severe data exposure risk, especially when debug mode might be enabled in production environments or shared by users in issue reports. Recursive sanitization correctly handling circular references is essential.
+**Prevention:** Implement a recursive sanitization mechanism on logger arguments that scrubs common sensitive key patterns (e.g. `/password|token|secret|credential|key|auth/i`) while preserving safe types (`Date`, `Error`, `RegExp`, arrays). Ensure `[Circular]` is logged instead of getting stuck in an infinite loop on objects that reference themselves.
