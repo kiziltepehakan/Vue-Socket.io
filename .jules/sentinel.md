@@ -1,0 +1,4 @@
+## 2024-05-24 - Data Leakage via Custom Console Loggers
+**Vulnerability:** The custom VueSocketIOLogger class previously passed un-sanitized event payload objects directly to `window.console` functions. Sensitive properties such as authentication tokens or passwords embedded within socket events could have leaked into the browser console logs, particularly when debugging is enabled.
+**Learning:** Any custom wrappers around console logging functions within libraries that handle potentially arbitrary payloads from third parties must proactively implement redaction to shield sensitive data from unintended leakage.
+**Prevention:** Implementing a recursive sanitization utility inside the logger singleton that identifies and strips known sensitive keys (`password`, `token`, etc.) while gracefully handling circular references and non-plain objects before the arguments are pushed to the browser console.
