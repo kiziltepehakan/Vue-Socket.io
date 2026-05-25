@@ -1,0 +1,4 @@
+## 2024-05-25 - Prevent Sensitive Data Leakage in Debug Logs
+**Vulnerability:** The logger class (`src/logger.js`) indiscriminately logs arbitrary data objects to the console when `debug` mode is true. If this data originates from Vuex mutations or Socket.io events containing credentials, API keys, or passwords, they are exposed in plain text in browser developer tools.
+**Learning:** Even simple wrappers around `console.log` require input sanitization, especially in libraries that bridge state management (Vuex) and real-time networking (Socket.io), where diverse and potentially sensitive payloads pass through globally.
+**Prevention:** Always implement data scrubbing functions that recursively iterate over complex objects and arrays to redact known sensitive keys before passing data to logging mechanisms. Properly handle edge cases like circular references to avoid crashing the logging system.
