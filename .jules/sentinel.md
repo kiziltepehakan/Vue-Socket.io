@@ -1,0 +1,4 @@
+## 2024-05-26 - Prevent sensitive data exposure in logger
+**Vulnerability:** The logger (`src/logger.js`) previously exposed any raw object passed into it using `window.console` (e.g., in Vuex store dispatches), risking accidental exposure of passwords, tokens, or other sensitive user state into browser console logs and possibly telemetry.
+**Learning:** Due to how the emitter blindly dispatches Vuex payloads using the logger when debugging is enabled, any component sending sensitive data as an event payload inherently exposed it in the console. Circular references also had to be accounted for while sanitizing to prevent the browser from hanging.
+**Prevention:** Always implement a sanitization phase before raw payload serialization/logging, specifically applying regular expressions filtering known sensitive keys (`password`, `token`, etc.), while guarding against infinite loops via a traversal tracker (`Set`).
