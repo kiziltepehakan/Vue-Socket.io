@@ -1,0 +1,4 @@
+## 2026-05-27 - [Sensitive Data Exposure in Logger]
+**Vulnerability:** The logger class `VueSocketIOLogger` was directly logging un-sanitized objects to the browser console. This means that if any Socket.IO events passed sensitive data (like passwords, auth tokens, or secrets), they would be stored in the browser's console history and observable by anyone viewing the console.
+**Learning:** Even internal logging wrappers need to implement sanitization if they are logging unstructured payloads or objects dynamically received through WebSockets, especially in client-side libraries where the console is easily accessible.
+**Prevention:** Implementing a recursive `sanitize` function within the logger class ensures that sensitive keys (like password, token, secret) are redacted before they are outputted via `window.console`.
