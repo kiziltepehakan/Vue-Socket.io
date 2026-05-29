@@ -1,0 +1,4 @@
+## 2026-05-29 - [Fix Sensitive Data Exposure in Logs]
+**Vulnerability:** The custom logger class (`src/logger.js`) logged arbitrary websocket data using `window.console.info`, etc. This could inadvertently expose sensitive information (like passwords, auth tokens, session secrets) if the socket payload contained such data during an event.
+**Learning:** Even when debug logs are seemingly harmless, wrappers that forward raw socket payloads to standard console methods can lead to sensitive data leakage. Recursively sanitizing payloads avoids this issue without breaking observability, especially handling circular references safely.
+**Prevention:** Implement recursive data sanitization methods within core logger wrappers to redact fields matching common sensitive keywords (`password`, `token`, `secret`, `credential`, `key`, `auth`) before passing the data to external sinks like `window.console`.
