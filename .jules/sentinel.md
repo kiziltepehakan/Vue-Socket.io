@@ -1,0 +1,4 @@
+## 2024-05-24 - [Exposed Sensitive Data in Logging via WebSocket Events]
+**Vulnerability:** The `src/logger.js` module previously logged WebSocket events (`data` parameters) directly to the console when `debug` mode was true. This could leak sensitive user information like passwords, API keys, and tokens if they were included in the raw WebSocket data.
+**Learning:** WebSocket payloads in real-time applications often contain sensitive authentication details that developers might forget to redact. Passing raw data blindly to logging utilities can expose these secrets to the browser console.
+**Prevention:** Always implement data sanitization in logging classes (`VueSocketIOLogger.sanitize`) before sending them to logging streams (like `window.console`). This involves recursively traversing objects/arrays and masking keys matching known sensitive patterns (`/password|token|secret|credential|key|auth/i`) while safely handling circular references.
