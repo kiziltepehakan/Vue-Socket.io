@@ -1,0 +1,4 @@
+## 2024-06-01 - Prevent Logging of Sensitive Information
+**Vulnerability:** The logger printed the whole payload from `event`, `info`, `warn` and `error` parameters, which could expose sensitive information (e.g., passwords, auth tokens, secrets) to browser consoles when debugging is enabled.
+**Learning:** Developers frequently enable debugging modes in environments where others (or browser extensions) might capture console logs. When building generic socket.io wrappers that broadcast all events, we cannot assume developers are manually sanitizing their payloads before sending them over the socket.
+**Prevention:** Implement recursive object/array sanitization in the underlying logger to automatically search for keys typical of sensitive data (like `password`, `token`, `secret`, `credential`, `key`, `auth`) and replace their values with `[REDACTED]`. Care must be taken to safely handle circular references to avoid crashing the logging functionality.
