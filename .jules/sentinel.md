@@ -1,0 +1,4 @@
+## 2023-10-27 - Centralized Log Sanitization for Socket Communication
+**Vulnerability:** Client-side sockets often log incoming/outgoing payloads for debugging. These payloads might contain sensitive information like tokens, passwords, or session keys, leading to data exposure in the browser console.
+**Learning:** Adding a data sanitizer layer within a custom wrapper around `window.console` effectively intercepts all output. A robust sanitizer must handle circular references, deeply nested structures, array map traversals, and safely avoid mutating special object types like `Error` or `Date`.
+**Prevention:** Implement a recursive data sanitization method (e.g., using regex to match sensitive keys like `password|token|secret`) in all custom logger classes to filter inputs before they reach the console output methods.
