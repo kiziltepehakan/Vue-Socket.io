@@ -1,0 +1,4 @@
+## 2024-06-11 - Exposed Sensitive Data in Browser Console Logs
+**Vulnerability:** Browser console logs for socket events (which can contain authentication tokens, passwords, and sensitive keys) were exposing sensitive plain-text data directly to end users.
+**Learning:** `console.info`, `console.error`, and `console.warn` calls must be strictly sanitized using recursive sanitization of plain objects/arrays before passing data out of libraries handling sockets or raw network streams, since circular references are common and the raw socket payloads are unverified.
+**Prevention:** Always wrap data being logged to the browser console with a strict plain-object/array sanitization filter using regex matching for `/password|token|secret|credential|key|auth/i`, avoiding `JSON.stringify` failures by handling `[Circular]` references safely with a Set.
