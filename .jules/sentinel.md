@@ -1,0 +1,4 @@
+## 2026-06-18 - Unsanitized Logging of Global Event Payloads
+**Vulnerability:** The internal `VueSocketIOLogger` blindly logged all incoming Socket.io event data payloads to the console when `debug` mode was active. Since these payloads are automatically integrated with Vuex state management, this created a high risk of exposing sensitive data such as JWT tokens, passwords, API credentials, and other PII handled by the frontend application via websocket streams or store actions.
+**Learning:** Development tools and debug loggers within library code are major vectors for data leakage, especially when logging unbounded data objects from global event streams or state management actions where the contents are unpredictable.
+**Prevention:** Always implement deeply recursive sanitization filters for custom loggers in library code prior to dumping arbitrarily nested data structures (like Socket.io messages or Vuex mutations) to standard output/console interfaces.
