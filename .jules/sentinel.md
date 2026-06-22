@@ -1,0 +1,4 @@
+## 2026-06-22 - Prevent Sensitive Data Exposure in Logs
+**Vulnerability:** The `VueSocketIOLogger` class logged raw data arrays/objects directly using `window.console.info`, potentially exposing user passwords, API tokens, and other sensitive information.
+**Learning:** When sanitizing JavaScript objects recursively for logs, it's critical to track circular references using a `WeakSet` (or similar) to prevent stack overflows, and to only process plain objects/arrays to avoid destroying or freezing complex types like `Error`, `Date`, or `RegExp` during serialization.
+**Prevention:** Always pass untrusted or expansive data objects through a recursive sanitizer that specifically looks for and redacts common sensitive keys (e.g. password, token, secret) before handing them to `console` or any external logging service.
