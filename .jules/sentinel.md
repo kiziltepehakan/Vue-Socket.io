@@ -1,0 +1,4 @@
+## 2024-06-27 - Sensitive Data Leakage in Logs
+**Vulnerability:** The logger printed out raw arguments received from `console.info`, `console.error`, and `console.warn` without sanitizing them. This could result in sensitive data (e.g. passwords, authentication tokens) being logged to the browser console when debugging is enabled.
+**Learning:** Even internal logging mechanisms must actively sanitize structured data before passing it to the console, as debug builds or unintended debugging activation could leak sensitive data to developers or users with console access.
+**Prevention:** Implement an object-traversing sanitizer for logging arguments that checks property names against a blacklist regex (like `/password|token|secret/i`), replacing matching values with `[REDACTED]`. It must handle circular references correctly using a `WeakSet` or similar mechanism.
