@@ -1,0 +1,4 @@
+## 2024-05-24 - Sensitive Data Exposure in Client-Side Logs
+**Vulnerability:** Client-side logger in `src/logger.js` logged raw data payloads directly to `window.console` without sanitizing potentially sensitive fields (like passwords, tokens, or credentials).
+**Learning:** Client-side libraries handling websocket/event payloads might inadvertently leak sensitive information to the browser console, which could be captured by browser extensions, malware, or exposed during screen sharing. It is crucial to implement data sanitization before logging.
+**Prevention:** Implement a recursive sanitization mechanism that redacts sensitive keys using a pattern match (e.g., `/password|token|secret|credential|key|auth/i`) while safely handling circular references and preserving special objects to prevent data leakage in client-side logs.
