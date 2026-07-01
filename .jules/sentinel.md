@@ -1,0 +1,4 @@
+## 2024-05-23 - Information Exposure via Console Logs
+**Vulnerability:** The `VueSocketIOLogger` class was logging un-sanitized WebSocket payload data directly to the browser console, potentially exposing sensitive information like tokens or passwords to anyone who opens the dev tools.
+**Learning:** Vue objects or large nested state objects sent through WebSocket events can contain circular references, causing standard `JSON.stringify` or simple recursive sanitization to throw exceptions. Strict filtering for plain objects/arrays and a `WeakSet` are required to safely sanitize without crashing the application or destroying observability.
+**Prevention:** Always implement a recursive sanitization mechanism that handles circular references and filters sensitive keys (`password`, `token`, etc.) before passing event data to `window.console` or external logging services.
