@@ -1,0 +1,4 @@
+## 2024-07-07 - Log Sanitization in Logger Singleton
+**Vulnerability:** The logger implementation in `VueSocketIOLogger` was directly logging unredacted event data using `window.console`. This could lead to exposing sensitive information (e.g., authentication tokens or passwords) inside browser consoles or captured logs.
+**Learning:** Directly passing raw object arguments directly to native logger functions without sanitization is a significant risk in frontend library utilities handling arbitrary real-time application data, especially when circular references are possible.
+**Prevention:** Implement recursive object traversal with a WeakSet to safely redact keys matching typical sensitive keywords (password, token, etc.) before emitting to the console, ensuring `Date`, `Error`, and circular references are gracefully handled.
