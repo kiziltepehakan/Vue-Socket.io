@@ -1,0 +1,4 @@
+## 2026-07-08 - Client-side Logging Data Exposure
+**Vulnerability:** The logger in `src/logger.js` logged all events directly to `window.console` without any sanitization, meaning sensitive data (like passwords or tokens) passed in WebSocket events or errors could be permanently exposed in the browser's developer console.
+**Learning:** Client-side loggers, especially those dealing with potentially raw WebSocket payloads or complex states, need recursive data sanitization before dumping to `console` functions. Circular references and built-in objects (Date, RegExp, Error) must be handled gracefully to avoid freezing the browser or breaking observability.
+**Prevention:** Implement a recursive sanitization utility that strips out sensitive keys (matching a regex pattern) from plain objects and arrays before logging, and use a `WeakSet` to prevent infinite loops on circular references.
