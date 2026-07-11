@@ -1,0 +1,4 @@
+## 2024-05-18 - Client-Side Logging of Sensitive Socket Data
+**Vulnerability:** The logger (`src/logger.js`) dumped raw socket.io payloads directly into the browser console using `window.console`. Because socket events often contain authentication tokens or session details, this directly leaked sensitive information in plaintext within the browser environment.
+**Learning:** Client-side logging of raw socket events is inherently dangerous without sanitization. In a browser setting, `console` logs are easily accessible by end-users or extensions. It's critical to scrub data before it hits standard output, especially when dealing with general-purpose event emitters.
+**Prevention:** Always implement a sanitization layer for logging utilities that process opaque objects or arrays. A simple recursive check for common sensitive keys (`password`, `token`, etc.) with a safeguard against circular references (`WeakSet`) significantly reduces the risk of accidental exposure.
