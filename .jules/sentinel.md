@@ -1,0 +1,4 @@
+## 2024-07-12 - Prevent Sensitive Data Leakage in Logs
+**Vulnerability:** Raw socket event payloads and connection details were logged directly to the browser console (`window.console`) when `debug` mode was enabled, potentially exposing sensitive data like passwords, tokens, or auth credentials.
+**Learning:** Developers often enable debug logging without realizing that full payload objects are serialized or accessible in the developer tools. Even local development logs can be dangerous if screens are shared, logs are aggregated, or malicious extensions are present. The logger needs a built-in defense mechanism.
+**Prevention:** Implement recursive sanitization before passing any objects to `window.console` functions. Filter known sensitive keys (e.g., password, token, secret, auth) and replace them with `[REDACTED]`. Be careful to handle circular references (using `WeakSet`) to avoid stack overflows and avoid mutating the original payload object.
