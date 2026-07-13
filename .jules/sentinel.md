@@ -1,0 +1,4 @@
+## 2026-07-13 - [Sensitive Data Exposure]
+**Vulnerability:** Vue-Socket.io Logger was printing raw websocket payloads directly to the browser console. This caused any sensitive data (like passwords, auth tokens, or API keys) transmitted over websockets to be exposed to client-side scripts, browser extensions, and anyone with developer tools open.
+**Learning:** Even client-side debugging tools need to treat input data as potentially sensitive. When integrating external communication streams (like websockets) directly to native browser APIs (like `console.info`), the wrapper must sanitize the data to prevent unintended leakage of credentials or PII.
+**Prevention:** Implement a recursive sanitization function on all logging mechanisms that strips out or redacts keys matching common sensitive patterns (`/password|token|secret|credential|key|auth/i`) before passing the objects to native console methods. Handle circular references to avoid crashing the client.
