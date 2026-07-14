@@ -1,0 +1,4 @@
+## 2025-02-09 - Sensitive Data Exposure in Logs
+**Vulnerability:** The logger class in `src/logger.js` exposed raw event arguments (which can contain sensitive user information like passwords and authentication tokens in Socket.io payloads) via `window.console.info`, `warn`, and `error` when debug mode is enabled.
+**Learning:** Libraries handling dynamic event payloads must actively sanitize inputs before logging them, as developers may inadvertently log authentication packets or credential exchanges without realizing the library will echo them to the browser console.
+**Prevention:** Always implement a sanitization filter on logger utilities that inspects and redacts object values associated with common sensitive keys (e.g., password, token, auth) while safely handling non-plain objects and circular references.
