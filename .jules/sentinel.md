@@ -1,0 +1,4 @@
+## 2024-07-19 - [Medium] Prevent Sensitive Data Exposure in Logs
+**Vulnerability:** The `VueSocketIOLogger` class logged all data points unconditionally if debug mode was enabled. This means authentication tokens, passwords, or other sensitive user data could be leaked to the browser console when `debug: true` is passed to the socket.io initialization.
+**Learning:** Security by obscurity is insufficient; debug logs should proactively scrub sensitive keys rather than assuming developers won't pass sensitive information to `logger.info()` or `logger.event()`. It's crucial to safely handle circular references when sanitizing to prevent the application from crashing while logging.
+**Prevention:** Implement a recursive data sanitizer on the logger itself that intercepts and redacts object values for keys that match sensitive patterns (`/password|token|secret|credential|key|auth/i`), applying this to all outputs going to `window.console`.
