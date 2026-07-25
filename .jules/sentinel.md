@@ -1,0 +1,4 @@
+## 2024-07-25 - Sensitive Data Exposure in Logger
+**Vulnerability:** The client-side VueSocketIOLogger class directly logs raw data objects received from Socket events into the `window.console` when debug mode is enabled. This risks exposing sensitive information like passwords, authentication tokens, or other secrets embedded in these objects.
+**Learning:** Client-side debug loggers often become accidental sources of sensitive data leaks, especially when dealing with unstructured data payloads like those typically exchanged via WebSockets.
+**Prevention:** Always implement a sanitization mechanism before passing arbitrary data payloads to logging functions. The `sanitize` method should handle recursive structures, circular references, and exclude non-plain objects to prevent unexpected side effects on binary data or application observability.
