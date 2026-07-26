@@ -1,0 +1,4 @@
+## 2026-07-26 - Sensitive Data Exposure in Logs
+**Vulnerability:** The logger in `src/logger.js` passes objects directly to `window.console` methods (info, warn, error) without any sanitization. This causes sensitive data (like passwords, auth tokens, secrets) present in Socket.io event payloads or component data to be exposed in the browser's console output.
+**Learning:** Even simple debugging loggers can inadvertently leak critical user secrets to the client-side console, violating privacy and security best practices.
+**Prevention:** Implement a sanitization function that recursively scrubs objects/arrays for keys matching sensitive patterns (password, token, secret, auth, credential, key) and replaces their values with '[REDACTED]' before logging them. Handle circular references safely using WeakSet.
