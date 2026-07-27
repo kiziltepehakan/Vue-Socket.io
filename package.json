@@ -12,7 +12,7 @@
     "url": "https://github.com/kiziltepehakan/Vue-Socket.io/issues"
   },
   "scripts": {
-    "build": "webpack --mode=production --progress --hide-modules"
+    "build": "webpack --mode=production --progress"
   },
   "repository": {
     "type": "git",

@@ -1,0 +1,4 @@
+## 2024-05-24 - Sensitive Data Exposure in Client-Side Logger
+**Vulnerability:** The VueSocketIOLogger class logged raw application state and websocket event payloads directly to the browser console. This could expose sensitive user data (passwords, tokens, credentials) passing through Vuex or Socket.io events.
+**Learning:** Client-side loggers, especially those that automatically intercept and log store mutations or real-time events, must sanitize payloads before outputting to the console to prevent accidental data leakage to browser extensions or shoulder surfers.
+**Prevention:** Implement recursive sanitization for plain objects and arrays in generic logging utilities, specifically filtering keys matching known sensitive patterns (e.g., password, token, secret) while handling circular references to prevent crashes.
