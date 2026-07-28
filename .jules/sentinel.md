@@ -1,0 +1,4 @@
+## 2024-05-15 - Exposed Sensitive Data in Logs
+**Vulnerability:** The `VueSocketIOLogger` class logged all payload data verbatim without any redaction or sanitization when `debug` mode was enabled, which exposed sensitive fields like passwords, tokens, and secrets in browser developer console logs.
+**Learning:** We need to be careful when printing generic, loosely-typed event payloads to the console. Objects can have deep nesting and unexpected circular references, meaning simple serialization isn't enough, and deep traversal is necessary.
+**Prevention:** Implement a recursive data sanitization method to redact known sensitive keys (`password`, `token`, etc.) before passing the payload to `console.info`, `console.warn`, etc. Ensure this method safely handles circular references and does not break object logging.
