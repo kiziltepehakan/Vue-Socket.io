@@ -1,0 +1,4 @@
+## 2024-05-18 - Prevent Sensitive Data Exposure in Logs
+**Vulnerability:** The `VueSocketIOLogger` class logged raw data passed to `info`, `warn`, `error`, and `event` directly when `debug` mode was enabled, which could unintentionally expose sensitive values (e.g., passwords, auth tokens) to the browser console.
+**Learning:** Because Socket.io interactions often deal with authentication or sensitive payloads, logging mechanisms must sanitize payloads before dispatching to `console` (even during debug mode) to prevent leaking PII or credentials. Recursive deep cloning for sanitization needs to defensively handle non-plain objects, arrays, and circular references.
+**Prevention:** Implement a recursive sanitization utility with circular reference detection (`WeakSet`) and regular expression matching against known sensitive keys (e.g., `password`, `token`, `secret`) in centralized logging modules.
