@@ -1,0 +1,4 @@
+## 2023-10-27 - Sensitive Data Exposure in Plugin Logs
+**Vulnerability:** The `VueSocketIOLogger` was directly passing raw data and payloads to `window.console.info`, `warn`, `error`, etc. Because this is a library connecting websockets, it is highly likely that authentication payloads or user credentials would be logged directly to the browser console when `debug` mode is enabled.
+**Learning:** Even diagnostic/debug loggers in front-end libraries can become critical data exposure vectors if they naively dump objects to `window.console`. Front-end consoles are often captured by error reporting tools (e.g., Sentry, LogRocket), which turns a local exposure into a remote data leak.
+**Prevention:** Implement recursive sanitization before passing objects to logging sinks. Ensure sanitization gracefully handles circular references (via `WeakSet`), complex object types, and targets standard sensitive keys (`password`, `token`, `secret`, `credential`, `key`, `auth`).
