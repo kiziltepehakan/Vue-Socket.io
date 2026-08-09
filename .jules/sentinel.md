@@ -1,0 +1,4 @@
+## 2026-08-09 - Sensitive Data Exposure in Logs
+**Vulnerability:** The logger class (`src/logger.js`) logged sensitive user data (passwords, tokens, api keys) in plaintext whenever objects were passed to its `info`, `warn`, `error`, or `event` methods.
+**Learning:** Incomplete parameter sanitization can lead to accidental sensitive data exposure, particularly when using global loggers combined with Vue's reactivity systems which frequently log complete state objects. It is necessary to sanitize inputs recursively while ensuring special objects (like RegExp or Date) and circular references are handled safely.
+**Prevention:** Implement a recursive sanitization method in the logger that utilizes a `WeakSet` for circular reference tracking, correctly preserving types, and redacting object properties that match standard sensitive keywords (`/password|token|secret|credential|key|auth/i`).
