@@ -8,27 +8,57 @@ export default new class VueSocketIOLogger {
         this.prefix = '%cVue-Socket.io: ';
     }
 
+    sanitize(data, seen = new WeakSet()) {
+        if (!data || typeof data !== 'object') return data;
+
+        // Preserve common non-plain objects
+        if (data instanceof Error || data instanceof Date || data instanceof RegExp) return data;
+
+        if (seen.has(data)) return '[Circular]';
+
+        const isPlainObject = Object.prototype.toString.call(data) === '[object Object]';
+        const isArray = Array.isArray(data);
+
+        if (!isPlainObject && !isArray) return data;
+
+        seen.add(data);
+        const copy = isArray ? [] : {};
+        const sensitiveRegex = /password|token|secret|credential|key|auth/i;
+
+        for (const key in data) {
+            if (Object.prototype.hasOwnProperty.call(data, key)) {
+                if (typeof key === 'string' && sensitiveRegex.test(key)) {
+                    copy[key] = '[REDACTED]';
+                } else {
+                    copy[key] = this.sanitize(data[key], seen);
+                }
+            }
+        }
+
+        return copy;
+    }
+
     info(text, data = '') {
 
-        if(this.debug) window.console.info(this.prefix+`%c${text}`, 'color: blue; font-weight: 600', 'color: #333333', data);
+        if(this.debug) window.console.info(this.prefix+`%c${text}`, 'color: blue; font-weight: 600', 'color: #333333', this.sanitize(data));
 
     }
 
     error() {
 
-        if(this.debug) window.console.error(this.prefix, ...arguments);
+        if(this.debug) window.console.error(this.prefix, ...Array.from(arguments).map(arg => this.sanitize(arg)));
 
     }
 
     warn() {
 
-        if(this.debug) window.console.warn(this.prefix, ...arguments);
+        if(this.debug) window.console.warn(this.prefix, ...Array.from(arguments).map(arg => this.sanitize(arg)));
 
     }
 
     event(text, data = ''){
 
-        if(this.debug) window.console.info(this.prefix+`%c${text}`, 'color: blue; font-weight: 600', 'color: #333333', data);
+        if(this.debug) window.console.info(this.prefix+`%c${text}`, 'color: blue; font-weight: 600', 'color: #333333', this.sanitize(data));
 
     }
 
