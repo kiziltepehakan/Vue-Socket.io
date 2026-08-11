@@ -1,0 +1,4 @@
+## 2024-05-24 - Data leakage via console logger in non-production builds
+**Vulnerability:** Debug logs in `src/logger.js` passed entire data objects directly to `window.console` functions when `debug: true` was enabled. This could expose sensitive information such as authentication tokens, passwords, or PII that were part of state payloads or Socket.io events.
+**Learning:** Even diagnostic utilities require defense in depth. Logging mechanisms are prime vectors for unintentional data leakage, especially when they act as an intermediary for state changes (Vuex).
+**Prevention:** Implement recursive sanitization on logged payloads. Use a regex to identify sensitive keys (e.g. `/password|token|secret|credential|key|auth/i`) and replace their values with `[REDACTED]`. Use a `WeakSet` to safely handle circular references in nested objects without causing stack overflows.
