@@ -1,0 +1,4 @@
+## 2024-05-24 - Sensitive Data Exposure in Logs
+**Vulnerability:** Debug logs in `VueSocketIOLogger` pass unsanitized socket data directly to the browser console. Given socket data often includes authentication payloads or sensitive information, this risks exposing sensitive data in development or production debug environments.
+**Learning:** Even internal logging mechanisms require rigorous input sanitization, particularly when handling external payloads (e.g., from sockets or APIs) that might contain unknown structure or sensitive data (like passwords, tokens).
+**Prevention:** Always implement a `sanitize` method on the logger or at the boundary before passing data to `console` or any external log aggregation service. Ensure it safely handles deep objects, circular references, and avoids breaking on complex types (Date, Regex, Error).
