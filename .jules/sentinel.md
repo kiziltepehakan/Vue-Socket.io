@@ -1,0 +1,4 @@
+## 2024-08-13 - [Sensitive Data Exposure in Logger]
+**Vulnerability:** The `VueSocketIOLogger` class in `src/logger.js` exposed raw event data and arguments to `window.console` without any sanitization. This allowed sensitive data such as passwords, tokens, API keys, and credentials to be leaked in the browser console.
+**Learning:** This codebase lacked a unified serialization/sanitization layer before logging to the console. Direct transmission of objects via WebSockets often contains authentication data that should not be visible in debugging logs.
+**Prevention:** Implement a recursive data sanitizer across all logger functions that automatically redacts keys matching sensitive patterns (e.g., password, token, auth). Handle circular references safely and preserve standard objects (Date, RegExp, Error).
