@@ -1,0 +1,4 @@
+## 2024-08-16 - Prevent Sensitive Data Exposure in Logs
+**Vulnerability:** Sensitive data like passwords, tokens, or credentials passed through socket events were blindly logged to the browser console when `debug` mode was enabled, leading to potential data exposure.
+**Learning:** Unrestricted logging of event arguments can easily leak credentials if those arguments contain authentication data. Logging mechanisms must sanitize plain objects and arrays to strip or redact sensitive keys, while carefully avoiding circular reference loops and preserving the shape of other objects.
+**Prevention:** Implement recursive object sanitization with circular reference checks (using `WeakSet`) on all console output functions to redact keys matching sensitive patterns (e.g. `password|token|secret|credential|key|auth`).
