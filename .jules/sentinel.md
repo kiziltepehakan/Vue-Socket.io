@@ -1,0 +1,4 @@
+## 2026-08-18 - Missing data sanitization in logger
+**Vulnerability:** The logger logged entire payloads indiscriminately when `debug` mode was true. This means any auth tokens, passwords, or credentials dispatched through the socket could leak directly to the client's browser console or remote logging tools.
+**Learning:** Client-side libraries integrating with systems that can dispatch arbitrary application payloads (like WebSockets / Vuex) must assume sensitive data passes through them. Logging mechanisms must sanitize data globally by default. WeakSet is essential when sanitizing deep objects to avoid exceptions on circular references.
+**Prevention:** Implement sanitization logic in logging interceptors or directly within logger utilities to automatically scrub keys matching sensitive patterns (`/password|token|secret|credential|key|auth/i`) prior to emitting them to `window.console`.
