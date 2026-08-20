@@ -1,0 +1,4 @@
+## 2024-05-15 - Unsanitized Logging of Event Payloads
+**Vulnerability:** The `VueSocketIOLogger` was directly passing raw event data into `console.info`, `console.error`, etc. If incoming websocket messages (or outbound dispatched Vuex actions) contained sensitive information (e.g., tokens, passwords, API keys in the `args` payload), they were being dumped directly into the browser console as plain text. This is an information disclosure vulnerability.
+**Learning:** Even internal logging mechanisms and debugging tools in UI plugins must sanitize payloads, as socket events and state management actions often carry user credentials and session tokens during authentication flows.
+**Prevention:** Implement a recursive sanitization function that scrubs properties matching common sensitive key patterns (e.g., `/password|token|secret|credential|key|auth/i`) from objects and arrays before logging. Use `WeakSet` to prevent infinite loops from circular references.
