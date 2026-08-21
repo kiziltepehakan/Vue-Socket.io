@@ -1,0 +1,4 @@
+## 2023-10-27 - Browser Log Sensitive Data Exposure
+**Vulnerability:** Browser console logger (`src/logger.js`) dumped arbitrary event and configuration data via `window.console` without sanitization, potentially exposing passwords, authentication tokens, and API secrets.
+**Learning:** Browser environments require careful redaction of debug objects. A deep-cloning sanitizer must safely handle circular references (e.g. `seen.has(obj)`) and specifically target plain objects/arrays to avoid hanging on binary or complex DOM/BOM objects while matching a blacklist of sensitive keys (`/password|token|secret|credential|key|auth/i`).
+**Prevention:** Implement automatic recursive data redaction in the lowest-level logging singleton that handles output, before passing arguments to the native console interface.
