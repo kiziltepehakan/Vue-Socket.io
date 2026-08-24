@@ -1,0 +1,4 @@
+## 2026-08-24 - Sensitive Data Leak in Socket Debug Logs
+**Vulnerability:** The library's debug logging feature printed raw socket event data directly to `window.console` without any sanitization. This caused applications relying on this library to inadvertently log sensitive data (like passwords or authentication tokens sent via websockets) to the browser console when `debug: true` was enabled.
+**Learning:** Even diagnostic or debug features in client-side libraries can be significant vectors for data exposure. When building a library that acts as a conduit for potentially arbitrary application data, we cannot assume the data is safe to log in plaintext.
+**Prevention:** Always implement automatic redaction or sanitization of known sensitive field names (like `password`, `token`, etc.) when building generic event-logging utilities. Never trust the payload of an intercepted generic event to be safe for display without processing.
