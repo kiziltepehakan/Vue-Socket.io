@@ -1,0 +1,4 @@
+## 2024-08-26 - Prevent Sensitive Data Leakage in Debug Logs
+**Vulnerability:** The logger class in `src/logger.js` logged all events and their arguments (such as payloads for login/registration) verbatim to the browser console when debug mode is enabled. This risks exposing sensitive information like passwords, API keys, and tokens if developers or users enable debug mode.
+**Learning:** Even internal libraries for Vue need robust PII/secrets redaction in their debug logs, since developers frequently forget to disable debug mode in production, or users might inspect the console. Object traversal for logging must also safely handle circular references without destroying observability.
+**Prevention:** Implement a recursive sanitization mechanism on all log arguments matching a sensitive keyword regex (e.g. `password|token|secret|credential|key|auth`), with a WeakSet to safely handle circular references.
