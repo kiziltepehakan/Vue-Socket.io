@@ -1,0 +1,4 @@
+## 2024-05-24 - Exposed Sensitive Data in Event Logging
+**Vulnerability:** Real-time event debug logging via `window.console` (`info`, `error`, `warn`, `event` in `src/logger.js`) exposed raw object payloads, potentially leaking sensitive information (passwords, tokens, secrets) to the client's browser console if `debug` mode is enabled.
+**Learning:** Real-time event streams often contain complete raw payloads, requiring a robust sanitize function that can recursively clean arbitrary depth objects/arrays while safely handling circular references and skipping native/binary data (e.g., Error, Date, RegExp) to prevent freezing or destroying observability.
+**Prevention:** Implement recursive sanitization on all raw log outputs, using pattern matching (`/password|token|secret|credential|key|auth/i`) and `WeakSet` for circular reference tracking.
