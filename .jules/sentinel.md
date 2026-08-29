@@ -1,0 +1,4 @@
+## 2024-05-15 - Unredacted Logging in Socket.io Payloads
+**Vulnerability:** The logger class (`src/logger.js`) in `vue-socket.io-v4` logged entire Socket.io payload objects using `console.info`, `console.error`, and `console.warn` without sanitization. This allowed sensitive information such as passwords, tokens, and secrets passed through Socket.io events to be exposed in the browser console.
+**Learning:** External objects passed into logging systems must always be sanitized before output, especially when handling arbitrary payload data from networks or sockets.
+**Prevention:** Implement a recursive sanitization method to scrub known sensitive keys (e.g., matching regex `/password|token|secret|credential|key|auth/i`) from objects and arrays before logging. Handle circular references to avoid max call stack errors.
