@@ -1,0 +1,4 @@
+## 2023-10-27 - Sensitive Data Exposure in Logs
+**Vulnerability:** The logger class blindly logged raw socket event data directly to `window.console` without sanitization, risking the exposure of sensitive data like passwords, tokens, or credentials in client-side logs.
+**Learning:** Client-side socket libraries can handle highly sensitive information passing between the server and the client. Logging raw event payloads is extremely risky since client logs might be sent to error-tracking services or viewed by unauthorized users in shared environments.
+**Prevention:** Always implement a sanitization layer on client-side loggers before outputting structured data. Ensure keys matching sensitive terms (`password`, `token`, `secret`, `credential`, `key`, `auth`) are redacted, and handle circular references properly to avoid crashing the client.
