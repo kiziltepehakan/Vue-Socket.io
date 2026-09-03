@@ -8,28 +8,38 @@ export default new class VueSocketIOLogger {
         this.prefix = '%cVue-Socket.io: ';
     }
 
+    sanitize(data, seen = new WeakSet()) {
+        if (typeof data !== 'object' || data === null) return data;
+        if (data instanceof Error || data instanceof Date || data instanceof RegExp) return data;
+        const isPlainObject = Object.prototype.toString.call(data) === '[object Object]';
+        if (!isPlainObject && !Array.isArray(data)) return data;
+        if (seen.has(data)) return '[Circular]';
+        seen.add(data);
+
+        const sensitiveKeys = /password|token|secret|credential|key|auth/i;
+        if (Array.isArray(data)) return data.map(item => this.sanitize(item, seen));
+
+        const sanitized = {};
+        for (const [k, v] of Object.entries(data)) {
+            sanitized[k] = sensitiveKeys.test(k) ? '[REDACTED]' : this.sanitize(v, seen);
+        }
+        return sanitized;
+    }
+
     info(text, data = '') {
-
-        if(this.debug) window.console.info(this.prefix+`%c${text}`, 'color: blue; font-weight: 600', 'color: #333333', data);
-
+        if(this.debug) window.console.info(this.prefix+`%c${text}`, 'color: blue; font-weight: 600', 'color: #333333', this.sanitize(data));
     }
 
-    error() {
-
-        if(this.debug) window.console.error(this.prefix, ...arguments);
-
+    error(...args) {
+        if(this.debug) window.console.error(this.prefix, ...args.map(arg => this.sanitize(arg)));
     }
 
-    warn() {
-
-        if(this.debug) window.console.warn(this.prefix, ...arguments);
-
+    warn(...args) {
+        if(this.debug) window.console.warn(this.prefix, ...args.map(arg => this.sanitize(arg)));
     }
 
     event(text, data = ''){
-
-        if(this.debug) window.console.info(this.prefix+`%c${text}`, 'color: blue; font-weight: 600', 'color: #333333', data);
-
+        if(this.debug) window.console.info(this.prefix+`%c${text}`, 'color: blue; font-weight: 600', 'color: #333333', this.sanitize(data));
     }
 
 }
