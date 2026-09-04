@@ -1,0 +1,4 @@
+## 2024-03-21 - Unsanitized Logging in Browser Environment
+**Vulnerability:** The logger (`src/logger.js`) writes incoming events and arguments directly to the browser console (`window.console`) without any sanitization. If an application passes sensitive information (such as tokens, passwords, or PII) via Socket.io events, this data is exposed to any user or extension with access to the developer console.
+**Learning:** Browser environments present unique risks for logging. A library that intercepts global events (like Vue-Socket.io) acts as a middleman and must ensure it doesn't inadvertently leak sensitive data from other parts of the application into the console.
+**Prevention:** Implement a deep sanitization function for all data passed to logging methods. Redact common sensitive keys (e.g., password, token, secret) to prevent exposure.
