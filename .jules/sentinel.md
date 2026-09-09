@@ -1,0 +1,4 @@
+## 2024-05-16 - Prevent sensitive data leakage in logs
+**Vulnerability:** The logger in debug mode was logging full object data (which might contain passwords, tokens, etc.) directly to the console.
+**Learning:** Even when output is limited to debug mode, we need to consider what information is being logged and sanitize it before it hits the console to avoid exposing sensitive data in development or production debug environments. We also needed to be careful about not destroying complex objects/binary structures and handling circular references to prevent freezes when logging.
+**Prevention:** Apply a robust sanitize function before logging complex objects, using recursive traversal with circular reference detection, and redacting values of keys that appear to contain sensitive data such as 'password', 'token', etc.
