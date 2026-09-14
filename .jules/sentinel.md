@@ -1,0 +1,4 @@
+## 2024-03-20 - Sensitive Data Exposure in Client Logs
+**Vulnerability:** The logger (`src/logger.js`) previously printed all event data (including potentially sensitive properties like tokens or passwords) raw to the console if debug mode was enabled.
+**Learning:** Even though client-side console logging is primarily for development, passing full event payloads or objects through Socket.io can inadvertently log sensitive session tokens, passwords, or authentication keys to the browser console. Since this library serves as an integration layer for Vue.js apps that frequently transmit authentication state, it's a ripe location for unintended data leakage.
+**Prevention:** Implemented a `sanitize` method on the logger class to intercept log messages and recursively replace known sensitive keys (e.g., `password`, `token`, `secret`, `credential`, `key`, `auth`) with `[REDACTED]`. It uses a WeakSet to handle circular references securely.
