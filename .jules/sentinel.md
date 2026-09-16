@@ -1,0 +1,4 @@
+## 2024-03-24 - Client-Side Logging Sensitive Data Exposure
+**Vulnerability:** The logger class was blindly logging data passed to events, potentially exposing sensitive information like tokens and passwords to the browser console.
+**Learning:** Client-side loggers shouldn't automatically assume all application state is safe for public visibility, even in debug modes.
+**Prevention:** Implement automatic redaction/sanitization on logger arguments specifically targeting fields that match patterns of sensitive data (like `password`, `token`, etc.), whilst safely handling circular dependencies and non-plain objects.
