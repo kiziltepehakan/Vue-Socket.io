@@ -1,0 +1,4 @@
+## 2023-10-27 - [Add data sanitization to VueSocketIOLogger]
+**Vulnerability:** The logger class in `src/logger.js` indiscriminately logged all provided data payloads via `window.console` without filtering. If sensitive properties (e.g. passwords, authentication tokens) were passed as part of the Socket.io payload, they would be visible in the console or captured by automated error tracking tools.
+**Learning:** Even frontend logging utilities designed for "debug" mode must anticipate the accidental inclusion of sensitive information in real-world payloads. Defensive logging requires structural sanitization that handles circular references without failing.
+**Prevention:** Implement structural data sanitization at the logger level before outputting any payload. Use regex matching on keys (e.g., /password|token|secret/i) to redact values.
