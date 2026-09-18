@@ -1,0 +1,4 @@
+## 2026-09-18 - Sensitive Data Exposure in Logs
+**Vulnerability:** The logger class (`src/logger.js`) in `vue-socket.io` blindly logged all data structures passed to `info`, `event`, `error`, and `warn` without filtering. This could expose sensitive application data (passwords, tokens, API keys) directly to the browser console.
+**Learning:** Third-party integrations (like a Vue wrapper for Socket.IO) often act as transparent proxies and can inadvertently leak sensitive payloads if they implement debugging/logging features without sanitization checks.
+**Prevention:** Always implement a sanitization layer when wrapping third-party libraries that provide logging or debugging capabilities. Ensure recursive sanitization handles circular references and does not break object instances (like Dates or Errors) while checking for sensitive keys.
