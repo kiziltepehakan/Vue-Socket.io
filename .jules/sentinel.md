@@ -1,0 +1,4 @@
+## 2024-05-24 - Fix sensitive data exposure in debug logger
+**Vulnerability:** Debug logger (`src/logger.js`) logged sensitive user data (passwords, tokens, secrets) directly into the browser console without any sanitization when the debug mode was enabled.
+**Learning:** Proper log sanitization in a JavaScript browser environment requires careful handling of circular references, plain objects, arrays, and standard objects like `Date` or `Error`. Using `WeakSet` is an effective strategy for cycle detection. Relying solely on `JSON.stringify` with a replacer could crash on cyclic objects or cause data loss.
+**Prevention:** Always ensure that dynamically logged objects, especially from external inputs or broad internal states, are sanitized before passing them to the console or other log aggregators. Include a recursive sanitize utility designed to redact matched key names safely without modifying the original input.
