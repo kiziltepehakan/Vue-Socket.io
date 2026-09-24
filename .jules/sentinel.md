@@ -1,0 +1,4 @@
+## 2024-10-24 - Exposed Sensitive Data in Logs
+**Vulnerability:** The logger class in `src/logger.js` passed raw objects directly to `window.console` methods without sanitization, risking exposure of sensitive properties (like passwords or tokens) in browser consoles.
+**Learning:** Browser console logging of complex event payloads needs defensive sanitization. In a frontend socket client library, it's crucial to recursively traverse event objects and explicitly filter out known sensitive key names, handling circular references gracefully to avoid breaking the application state.
+**Prevention:** Always ensure logging utilities implement a sanitization layer for arbitrary data payloads, particularly when dealing with event-driven architectures where the structure of data can be unpredictable. Use an allowlist or denylist pattern alongside cycle detection (`WeakSet`).
