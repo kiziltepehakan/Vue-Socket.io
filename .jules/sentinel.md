@@ -1,0 +1,4 @@
+## 2024-05-15 - [Sensitive Data Exposure in Console Logs]
+**Vulnerability:** Debug logs in `src/logger.js` exposed raw event data and objects which could contain sensitive credentials like passwords, auth tokens, or secrets.
+**Learning:** Console logs running on the client side in production or debug mode could leak sensitive state. Raw payloads should be sanitized before logging, especially when handling third-party integrations or auth-related Socket.io events. Handling circular references and non-plain objects is critical to prevent logging from crashing the app or hanging.
+**Prevention:** Always implement a sanitization filter on generic logging functions, specifically targeting keys matching patterns like `/password|token|secret|credential|key|auth/i`, before printing to `console` or sending to external monitoring services.
