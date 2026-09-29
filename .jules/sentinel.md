@@ -1,0 +1,4 @@
+## 2024-05-24 - Sensitive Data Exposure in Debug Logs
+**Vulnerability:** Debug logs in `VueSocketIOLogger` previously printed entire event payloads and state objects directly to the browser console. If a socket event contained sensitive data like passwords or authentication tokens, enabling debug mode would expose this data directly in the console, potentially leaking it.
+**Learning:** Third-party event integrations (like Socket.io wrappers) that globally log events must assume that user payloads may contain sensitive credentials. Relying on users not to pass sensitive data via web sockets is insufficient when debug logs exist.
+**Prevention:** Implement deep object sanitization across all logging outputs by default, specifically redacting keys that commonly hold sensitive information (`password`, `token`, `secret`, `credential`, `key`, `auth`) while gracefully handling circular references and complex object types without destroying debug observability.
