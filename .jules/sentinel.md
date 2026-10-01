@@ -1,0 +1,4 @@
+## 2024-10-01 - Prevent Sensitive Data Leakage in Logs
+**Vulnerability:** The logger in `src/logger.js` was blindly logging all data passed to it (`data` in `info` and `event`, and all `arguments` in `error` and `warn`), which could inadvertently leak sensitive information like passwords, tokens, or API keys into the console.
+**Learning:** Even internal logging mechanisms must be treated as potential sinks for sensitive data. We need to implement defensive logging by sanitizing objects before they are printed.
+**Prevention:** Implement a recursive sanitization mechanism that replaces values associated with sensitive keys (e.g., matching `/password|token|secret|credential|key|auth/i`) with `[REDACTED]`. Care must be taken to safely handle circular references and avoid freezing on non-plain objects or binary data.
