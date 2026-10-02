@@ -1,0 +1,4 @@
+## 2026-10-02 - Fix Sensitive Data Exposure in Logs
+**Vulnerability:** The logger (`src/logger.js`) previously output raw socket events directly to `window.console` without any sanitization. This meant any event data payload containing passwords, auth tokens, or other credentials would be fully visible in the browser console.
+**Learning:** Even though this is just a client-side logger, any data broadcasted through sockets and logged can expose sensitive user information or secrets to anyone looking at the browser console, breaking data privacy and potentially exposing active session tokens.
+**Prevention:** Implement a recursive sanitization step for all logging payloads that replaces keys matching sensitive patterns (e.g., password, token, secret, auth, credential) with `[REDACTED]` while safely handling circular structures and ignoring complex non-plain objects to avoid performance penalties or execution errors.
