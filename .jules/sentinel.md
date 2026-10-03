@@ -1,0 +1,4 @@
+## 2026-10-03 - [Logger sensitive data leak]
+**Vulnerability:** The logger in `src/logger.js` was natively logging socket payloads and arguments via `window.console` without sanitization. This could leak sensitive data like tokens, passwords, and API keys present in payloads to the client-side console.
+**Learning:** Native console logging without filtering can be a vector for data exposure, particularly in libraries processing generic event payloads. Custom sanitization of arguments (using robust cycle-detection and specific key matching) is critical to prevent accidental exposure of sensitive keys matching patterns like `password`, `token`, etc.
+**Prevention:** Always implement an explicit sanitization layer for logging payloads before output, especially for events dealing with authentication or external keys.
