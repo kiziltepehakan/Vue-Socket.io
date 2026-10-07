@@ -1,0 +1,4 @@
+## 2024-10-07 - Prevent sensitive data exposure in logger
+**Vulnerability:** The logger (`src/logger.js`) in debug mode was directly logging all arguments to `window.console`. This could lead to sensitive information like passwords, authentication tokens, and secrets being exposed in the browser's developer console if such data is passed through socket events or store dispatches.
+**Learning:** Logging frameworks and simple wrappers often neglect to sanitize the payloads they receive. Because VueSocketIOLogger is an integration point that handles raw event payloads (often deeply nested), it requires a robust, recursive sanitizer that gracefully handles circular references and preserves core object types (`Error`, `Date`, `RegExp`).
+**Prevention:** Implement a recursive data sanitization method applied to all logging methods before outputting. Specifically look for keys matching `/password|token|secret|credential|key|auth/i` and redact their values.
