@@ -1,0 +1,5 @@
+
+## 2024-05-24 - [Sensitive Data Exposure in Logger]
+**Vulnerability:** The logger class `VueSocketIOLogger` was directly passing data arguments to `window.console` methods without any sanitization. This could inadvertently expose sensitive information like passwords, tokens, or credentials if they were included in the payloads or state being logged when debugging is enabled.
+**Learning:** Client-side libraries integrating with broad event systems (like Socket.IO) or state management (like Vuex) often receive entire data objects. Simply passing these to debug loggers can create a significant data leakage vector, particularly since browser consoles can be inspected or sometimes captured by error reporting tools.
+**Prevention:** Implement a recursive data sanitization method (using `WeakSet` to handle circular references safely) that redacts known sensitive keys (e.g., matching `/password|token|secret|credential|key|auth/i`) before any data is passed to logging outputs. Apply this sanitization universally across all logging methods (`info`, `error`, `warn`, `event`).
