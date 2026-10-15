@@ -1,0 +1,4 @@
+## 2024-05-24 - [Log Data Sanitization]
+**Vulnerability:** Sensitive data (passwords, tokens, secrets, credentials, keys) could be leaked to the browser's console logs via Vue-Socket.io's debugging functions (info, error, warn, event).
+**Learning:** Even internal or strictly client-side debug loggers must consider data sanitation. Passing entire objects directly from event payloads or application state into console methods can inadvertently expose sensitive information to anyone with access to the developer tools, potentially violating security policies or exposing API keys and tokens.
+**Prevention:** Implement a recursive data sanitization method within the logger module that explicitly redacts object keys matching known sensitive patterns (e.g., /password|token|secret|credential|key|auth/i) before they are dispatched to `window.console` methods. Safely handle circular references to prevent stack overflow errors during the sanitization process.
