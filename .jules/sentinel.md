@@ -1,0 +1,4 @@
+## 2024-10-24 - [Sensitive Data Exposure in Logs]
+**Vulnerability:** The `src/logger.js` class passes arguments to `window.console` directly for logging (in debugging mode). If objects containing sensitive keys like 'password', 'token', 'secret', etc., are passed into the logger, this sensitive data can be inadvertently logged into the console, exposing credentials.
+**Learning:** Even though logging is often a harmless debugging mechanism, when the arguments are not sanitized properly, sensitive object structures may end up in client-side or server-side console logs where they might be viewed by unauthorized people, collected by log aggregators, or otherwise persisted.
+**Prevention:** Implement sanitization logic in logging mechanisms to actively redact keys that contain sensitive words such as "password", "token", "secret", "credential", "key", or "auth". A recursive function can clean the objects while preserving essential type formats.
