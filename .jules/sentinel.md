@@ -1,0 +1,4 @@
+## 2024-10-18 - [Sensitive Data Exposure in Logs]
+**Vulnerability:** The logger class (`src/logger.js`) dumped arbitrary objects to the browser console when debug mode was enabled, which could expose sensitive data like auth tokens or passwords if they are part of socket payloads.
+**Learning:** Even internal logging classes need a sanitization strategy because debugging options might be enabled in unexpected environments or users might blindly copy-paste logs containing sensitive data. Implementing a safe sanitization function required a WeakSet to handle `[Circular]` references safely to avoid crashing on generic circular objects.
+**Prevention:** Always implement data masking or redaction on logging utilities when dealing with arbitrary payloads (like web socket messages) before they hit `console.log`.
