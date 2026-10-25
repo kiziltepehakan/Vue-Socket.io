@@ -1,0 +1,4 @@
+## 2026-10-25 - Sensitive Data Logging
+**Vulnerability:** The logger passes all data payloads and arguments directly to window.console methods without sanitization, which can leak sensitive data (e.g., passwords, tokens) into the browser console logs.
+**Learning:** In frontend applications, third-party libraries or standard components might broadcast sensitive info via sockets or events. Even in debug modes or unexpected errors, we must ensure these are not blindly logged to `window.console` where extensions or user shoulder-surfing could capture them.
+**Prevention:** Implement recursive sanitization on logger inputs that masks values for keys indicating sensitive info (like `password`, `token`, `secret`, `credential`, `key`, `auth`), carefully handling circular references to avoid crashing.
