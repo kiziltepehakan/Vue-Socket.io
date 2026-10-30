@@ -1,0 +1,4 @@
+## 2024-10-30 - Prevent Sensitive Data Exposure in Logs
+**Vulnerability:** The logger class (`src/logger.js`) logged all provided data verbatim. Since Vuex actions and mutations are directly dispatched with payload data, sensitive information (e.g. passwords, authentication tokens, credentials) was inadvertently exposed in the console logs during development (and potentially in production if debug was enabled).
+**Learning:** Even internal helper loggers need to be defensively written. When a library automatically bridges event streams into an application state store, the payloads will almost certainly contain sensitive PII or authentication details.
+**Prevention:** Implement a recursive sanitization mechanism on the logger side. Explicitly filter on common sensitive key names (`/password|token|secret|credential|key|auth/i`) and handle circular references gracefully (using `WeakSet`) to avoid blowing up the application just for logging.
