@@ -1,0 +1,4 @@
+## 2024-05-18 - Prevent sensitive data leakage in logger
+**Vulnerability:** The `VueSocketIOLogger` class logged raw data arrays/objects containing sensitive information (e.g., passwords, auth tokens) to `window.console` when debug mode was enabled.
+**Learning:** Even internal logging mechanisms meant for debugging can expose sensitive state to the client side or logs if the passed payloads (like raw socket event packets or Vuex mutation payloads) contain sensitive credentials or keys without sanitization.
+**Prevention:** Implement a deep sanitization function on logged objects/arrays to redact values matching sensitive key patterns (e.g., `/password|token|secret/i`) while safely handling circular references and preserving observability for native objects like `Error`. Apply this consistently across all logging methods (`info`, `error`, `warn`, `event`).
