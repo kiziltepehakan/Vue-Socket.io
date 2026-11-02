@@ -1,0 +1,4 @@
+## 2024-05-18 - [Sensitive Data Logging]
+**Vulnerability:** The logger printed the entire event payload and arguments sent/received by socket.io without sanitization. This risked exposing sensitive credentials, tokens, or passwords to the browser's console where malicious scripts or users could extract them.
+**Learning:** Raw application state or event data should never be blindly output to log streams, especially on the client side. Any robust logging system must proactively redact keys known to contain sensitive information.
+**Prevention:** Implement a recursive sanitization utility across all logger entry points that intercepts payload objects, detects sensitive keys using a robust regex (e.g. `/password|token|secret|credential|key|auth/i`), and replaces their values with `[REDACTED]` prior to issuing console calls.
