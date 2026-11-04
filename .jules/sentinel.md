@@ -1,0 +1,4 @@
+## 2024-11-04 - [Medium] Fix log redaction
+**Vulnerability:** The logger class (`src/logger.js`) in `vue-socket.io` previously logged all socket event payloads to the browser console when debug mode was enabled, without filtering out sensitive data.
+**Learning:** This is a common pattern in wrapper libraries around socket.io, where the raw packet data is intercepted and blindly forwarded to `console.info`, `console.warn`, etc. In applications sending authentication tokens, passwords, or session secrets over WebSocket, this could lead to sensitive information leakage in client-side logs.
+**Prevention:** Implement a recursive sanitization mechanism on the arguments passed to the logging functions. This sanitizer should filter out keys matching common sensitive terms (e.g., `password`, `token`, `secret`, `credential`, `key`, `auth`) while gracefully handling circular references and complex object types without throwing exceptions or freezing on recursive payloads.
