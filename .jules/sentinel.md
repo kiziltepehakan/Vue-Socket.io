@@ -1,0 +1,4 @@
+## 2024-05-24 - Prevent sensitive data leakage in logs
+**Vulnerability:** The logger class `VueSocketIOLogger` in `src/logger.js` printed out raw objects provided to it in methods like `info`, `warn`, `error`, and `event`. This could lead to sensitive data (like passwords, tokens, auth keys) being exposed in browser console logs, particularly when running in debug mode.
+**Learning:** Browser environments and debugging tools can expose sensitive user information if raw objects containing credentials are unintentionally passed to a logger. It's important to actively sanitize log arguments that could contain this data, especially when `debug` can be enabled dynamically.
+**Prevention:** Always implement a sanitization filter within logger utilities to redact known sensitive keys (e.g., matching regex `/password|token|secret|credential|key|auth/i`) from nested objects before they are passed to `console` methods.
